@@ -25,8 +25,8 @@ constructor() {
     lat: 37.7,
     lng: -122.6,
     zoom: 9,
-    tileURL: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    focusCity: null,
+    focusPolicy: "total",
     style: function (geoJsonFeature) {
       return {
         fillColor: getColorTotal(geoJsonFeature.properties.total),
@@ -40,6 +40,36 @@ constructor() {
 
   this.policyCodeNames = Object.keys(data.features[0].properties).filter(x => !["cartodb_id","city","total"].includes(x));
 
+}
+
+updateStyle = (focusCity, focusPolicy) => {
+  this.setState({
+    focusCity: focusCity,
+    focusPolicy: focusPolicy,
+    style: function (geoJsonFeature) {
+      return {
+        fillColor: (focusPolicy === "total" ? getColorTotal(geoJsonFeature.properties.total) : getColor(geoJsonFeature.properties[focusPolicy])),
+        weight: (geoJsonFeature.properties.city === focusCity ? 2 : 1),
+        opacity: (geoJsonFeature.properties.city === focusCity ? 1 : 0.5),
+        color: (geoJsonFeature.properties.city === focusCity ? "#000" : "#FFF"),
+        fillOpacity: 0.9
+      } ;
+    }
+  });
+
+}
+
+onEachFeature = (feature, layer) => {
+  layer.on({
+    click: this.clickToFeature.bind(this)
+  });
+}
+
+clickToFeature = (e) => {
+  var layer = e.target;
+  layer.bringToFront();
+
+  this.updateStyle(e.target.feature.properties.city, this.state.focusPolicy);
 }
 
 // JSON Properties: 
@@ -68,7 +98,8 @@ render() {
         </Pane>
         <GeoJSON 
           data={data} 
-          style={this.state.style} />
+          style={this.state.style} 
+          onEachFeature={this.onEachFeature} />
         <ZoomControl position='topright' />
       </Map>
     );
