@@ -1,3 +1,13 @@
+/* Spectre Overrides: */
+
+$primary: #333;
+
+$primary-color: $primary;
+$primary-color-dark: darken($primary-color, 3%);
+$primary-color-light: lighten($primary-color, 3%);
+
+@import "node_modules/spectre.css/src/spectre.scss";
+
 html, body {
 	margin: 0;
     height: 100%;
@@ -20,6 +30,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+
+
+
 
 
 
