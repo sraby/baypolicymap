@@ -63,13 +63,16 @@ constructor() {
 }
 
 resetPosition = () => {
-  this.setState({
+  const map = this.refs.map.leafletElement;
+  map.setZoom(9);
+  map.flyTo({
     lat: 37.7,
     lng: -122.6
-  })
+  });
 }
 
 updateStyle = (focusCity, focusPolicy) => {
+  //.find( (element) => (element.feature.properties.city === focusCity) ) )
   this.setState({
     focusCity: focusCity,
     focusPolicy: focusPolicy,
@@ -86,6 +89,27 @@ updateStyle = (focusCity, focusPolicy) => {
 
 }
 
+zoomToFeature = (focusCity) => {
+  const data = this.refs.data.leafletElement;
+  const focusElement = Object.values(data._layers).find( (element) => (element.feature.properties.city === focusCity) ); 
+  const focusElementCenter = {
+    lat: (focusElement._bounds._northEast.lat + focusElement._bounds._southWest.lat) / 2,
+    lng: (focusElement._bounds._northEast.lng + focusElement._bounds._southWest.lng) / 2
+  };
+  console.log(focusElementCenter);
+  focusElement.bringToFront();
+      
+
+  const map = this.refs.map.leafletElement;
+  map.flyToBounds(focusElement._bounds, 
+    {
+      padding: [250,250], 
+      duration: 0.25, 
+      easeLinearity: 0.5, 
+      maxZoom: 10
+    });
+}
+
 onEachFeature = (feature, layer) => {
   layer.on({
     click: this.clickToFeature.bind(this)
@@ -94,26 +118,17 @@ onEachFeature = (feature, layer) => {
 
 clickToFeature = (e) => {
   var layer = e.target;
-  layer.bringToFront();
-
   this.updateStyle(e.target.feature.properties.city, this.state.focusPolicy);
+  layer.bringToFront();
 }
-
-// JSON Properties: 
-  // "cartodb_id": number,
-  // "city": string,
-  // "condoconv": 0 | 1, "justcause": 0 | 1, "stabilizat": 0 | 1, "reviewboar": 0 | 1, "mobilehome": 0 | 1,
-  // "sropres": 0 | 1, "foreclosur": 0 | 1, "jobshousin": 0 | 1, "commercial": 0 | 1, "trustfund": 0 | 1,
-  // "inclusiona": 0 | 1, "densitybon": 0 | 1, "landtrust": 0 | 1, "firstsourc": 0 | 1,
-  // "total": number
-
 
 render() {
 
   const position = [this.state.lat, this.state.lng];
 
     return (
-      <Map center={position} zoom={this.state.zoom} zoomControl={false} >
+    <div>
+      <Map ref='map' center={position} zoom={this.state.zoom} zoomControl={false} scrollWheelZoom={true} className="map-container">
         <TileLayer 
           className="basemap-layer"
           url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png" 
@@ -124,44 +139,45 @@ render() {
             url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png" />
         </Pane>
         <GeoJSON 
+          ref='data' 
           data={mapData} 
           style={this.state.style} 
           onEachFeature={this.onEachFeature} />
         <ZoomControl position='topright' />
-
-        <div className="dropdown dropdown-right policy-selector">
-          <a href="#" className="btn bg-light dropdown-toggle" tabIndex="0">
-            Map a specific policy... <i className="icon icon-caret"></i>
-          </a>
-          <ul className="menu">
-            <li className="menu-item" key="total">
-              <a onClick={() => this.updateStyle(this.state.focusCity, "total")}>Count of anti-displacement policies</a>
-            </li>
-            <li className="divider"></li>
-            {this.policyList.map( (policy) => 
-              <li className="menu-item" key={policy.code}>
-                <a onClick={() => this.updateStyle(this.state.focusCity, policy.code)}>{policy.name}</a>
-              </li> )}
-          </ul>
-        </div>
-
-        <div className="dropdown dropdown-right city-selector">
-          <a href="#" className="btn bg-light dropdown-toggle" tabIndex="0">
-            Find a city... <i className="icon icon-caret"></i>
-          </a>
-          <ul className="menu">
-            <li className="menu-item" key="total">
-              <a onClick={() => this.resetPosition()}>Show All</a>
-            </li>
-            <li className="divider"></li>
-            {this.cityList.map( (cityName) => 
-              <li className="menu-item" key={cityName}>
-                <a onClick={() => this.updateStyle(cityName, this.state.focusPolicy)}>{cityName}</a>
-              </li> )}
-          </ul>
-        </div>
-
       </Map>
+      <div className="overlay-container">
+        <button className="uk-button uk-button-default policy-selector" type="button">Map a specific policy... </button>
+        <div uk-dropdown="pos: bottom-right; mode: click">
+          <div className="uk-height-medium uk-overflow-auto">
+            <ul className="uk-nav uk-dropdown-nav">
+              <li>
+                <a href='#' onClick={() => this.updateStyle(this.state.focusCity, "total")}>Count of anti-displacement policies</a>
+              </li>
+              <li className="uk-nav-divider"></li>
+              {this.policyList.map( (policy) => 
+                <li key={policy.code}>
+                  <a href='#' onClick={() => this.updateStyle(this.state.focusCity, policy.code)}>{policy.name}</a>
+                </li> )}
+            </ul>
+          </div>
+        </div>
+        <button className="uk-button uk-button-default city-selector" type="button">Find a city... </button>
+        <div uk-dropdown="pos: bottom-right; mode: click">
+          <div className="uk-height-medium uk-overflow-auto">
+            <ul className="uk-nav uk-dropdown-nav">
+                <li>
+                  <a href='#' onClick={() => this.resetPosition()}>Show All</a>
+                </li>
+                <li className="uk-nav-divider"></li>
+                {this.cityList.map( (cityName) => 
+                <li key={cityName}>
+                  <a href='#' onClick={() => {this.updateStyle(cityName, this.state.focusPolicy); this.zoomToFeature(cityName);}}>{cityName}</a>
+                </li> )}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
     );
 
   }

@@ -1,40 +1,30 @@
 
-.policy-selector {
+.leaflet-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.policy-selector, .city-selector {
 	position: fixed;
 	color: #333;
-	top: 10px;
+    background-color: #FFF;
     right: 100px;
     border-radius: 5px;
 	z-index: 500;
 	border: 2px solid rgba(0,0,0,0.2);
-    background-clip: padding-box;
 
-    .menu {
-    	overflow-y: scroll;
-    }
-
-    .btn {
-    	border: none;
-    	border-radius: 5px;
+    &:hover, &:active, &:focus {
+        background-color: #f4f4f4
     }
 }
 
+.policy-selector {
+    top: 10px;
+}
+
 .city-selector {
-	position: fixed;
-	color: #333;
-	top: 90px;
-    right: 100px;
-    border-radius: 5px;
-	z-index: 500;
-	border: 2px solid rgba(0,0,0,0.2);
-    background-clip: padding-box;
-
-    .menu {
-    	overflow-y: scroll;
-    }
-
-    .btn {
-    	border: none;
-    	border-radius: 5px;
-    }
+	top: 70px;
 }
