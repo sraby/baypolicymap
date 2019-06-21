@@ -1,5 +1,5 @@
 import React from 'react';
-import { Map, Pane, TileLayer, GeoJSON, ZoomControl} from 'react-leaflet';
+import { Map, TileLayer, GeoJSON, ZoomControl} from 'react-leaflet';
 import L from 'leaflet';
 import mapData from './data/mapData.json';
 
@@ -43,6 +43,7 @@ constructor() {
         fillOpacity: 0.9
       } ;
     },
+  
   }
 
   this.policyList = [
@@ -132,11 +133,10 @@ render() {
           className="basemap-layer"
           url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png" 
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' />
-        <Pane>
-          <TileLayer 
-            className="reference-layer"
-            url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png" />
-        </Pane>
+        <TileLayer 
+          className="reference-layer"
+          url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png" 
+          pane="shadowPane" />        
         <GeoJSON 
           ref='data' 
           data={mapData} 
