@@ -150,12 +150,20 @@ render() {
           <div className="uk-height-medium uk-overflow-auto">
             <ul className="uk-nav uk-dropdown-nav">
               <li>
-                <a href='#' onClick={() => this.updateStyle(this.state.focusCity, "total")}>Count of anti-displacement policies</a>
+                <a href='#' 
+                   className={(this.state.focusPolicy === "total" ? "active" : "")}
+                   onClick={() => this.updateStyle(this.state.focusCity, "total")}>
+                     Count of anti-displacement policies
+                </a>
               </li>
               <li className="uk-nav-divider"></li>
               {this.policyList.map( (policy) => 
                 <li key={policy.code}>
-                  <a href='#' onClick={() => this.updateStyle(this.state.focusCity, policy.code)}>{policy.name}</a>
+                  <a href='#' 
+                     className={(this.state.focusPolicy === policy.code ? "active" : "")}
+                     onClick={() => this.updateStyle(this.state.focusCity, policy.code)}>
+                       {policy.name}
+                  </a>
                 </li> )}
             </ul>
           </div>
@@ -170,7 +178,11 @@ render() {
                 <li className="uk-nav-divider"></li>
                 {this.cityList.map( (cityName) => 
                 <li key={cityName}>
-                  <a href='#' onClick={() => {this.updateStyle(cityName, this.state.focusPolicy); this.zoomToFeature(cityName);}}>{cityName}</a>
+                  <a href='#' 
+                     className={(this.state.focusCity === cityName ? "active" : "")}
+                     onClick={() => {this.updateStyle(cityName, this.state.focusPolicy); this.zoomToFeature(cityName);}}>
+                      {cityName}
+                  </a>
                 </li> )}
             </ul>
           </div>

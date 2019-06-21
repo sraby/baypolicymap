@@ -21,6 +21,11 @@
     }
 }
 
+.uk-dropdown-nav > li > a.active {
+    font-weight: 600;
+    color: #666
+}
+
 .policy-selector {
     top: 10px;
 }
