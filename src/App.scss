@@ -1,3 +1,4 @@
+// LEAFLET OVERRIDES
 
 .leaflet-container {
     position: absolute;
@@ -7,6 +8,13 @@
     width: 100%;
 }
 
+.leaflet-touch .leaflet-bar {
+    box-shadow: 0 5px 15px rgba(0,0,0,.08);
+    border: 1px solid #e5e5e5;
+}
+
+// CUSTOM STYLING
+
 .policy-selector, .city-selector {
 	position: fixed;
 	color: #333;
@@ -14,7 +22,7 @@
     right: 70px;
     border-radius: 5px;
 	z-index: 500;
-	border: 2px solid rgba(0,0,0,0.2);
+	box-shadow: 0 5px 15px rgba(0,0,0,.08);
 
     &:hover, &:active, &:focus {
         background-color: #f4f4f4
@@ -31,5 +39,69 @@
 }
 
 .city-selector {
-	top: 70px;
+	top: 60px;
+}
+
+.map-legend {
+    z-index: 1020;
+    width: 300px;
+    position: absolute;
+    right: 10px;
+    bottom: 40px;
+
+    h5 {
+        margin-bottom: 10px;
+    }
+
+    .legend-items {
+        width: 260px;
+
+        .legend-label, .legend-color {
+            width: 52px;
+            height: 30px;
+            display: inline-block;
+
+            &.large {
+                width: 130px;
+            }
+        }
+
+        .legend-label {
+            text-align: center;
+        }
+
+        .legend-color {
+            &.gradient-1 {
+                background-color: #e1dbca;
+                border-radius: 5px 0 0 5px;
+            }
+
+            &.gradient-2 {
+                background-color: #F2E0BF
+            }
+
+            &.gradient-3 {
+                background-color: #F5D290;
+            }
+
+            &.gradient-4 {
+                background-color: #F4B030;
+            }
+
+            &.gradient-5 {
+                background-color: #e49d1b;
+                border-radius: 0 5px 5px 0;
+            }
+
+            &.color-no {
+                background-color: #E2DDCF;
+                border-radius: 5px 0 0 5px;
+            }
+            &.color-yes {
+                background-color: #F9BB56;
+                border-radius: 0 5px 5px 0;
+            }
+        }
+    
+    }
 }

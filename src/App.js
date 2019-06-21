@@ -3,6 +3,8 @@ import { Map, TileLayer, GeoJSON, ZoomControl} from 'react-leaflet';
 import L from 'leaflet';
 import mapData from './data/mapData.json';
 
+import Legend from './components/Legend';
+
 import './App.scss'
 
 const INITIAL_MAP_BOUNDS = L.latLngBounds(
@@ -131,8 +133,11 @@ onEachFeature = (feature, layer) => {
 
 render() {
   const position = [this.state.lat, this.state.lng];
+  const focusPolicyObject = this.policyList.find( (policy) =>
+    (policy.code === this.state.focusPolicy) 
+  );
 
-    return (
+  return (
     <div>
       <Map ref='map' center={position} zoom={this.state.zoom} zoomControl={false} scrollWheelZoom={true} className="map-container">
         <TileLayer 
@@ -193,6 +198,8 @@ render() {
             </ul>
           </div>
         </div>
+        <Legend className="legend"
+          policy={(focusPolicyObject && focusPolicyObject.name ? focusPolicyObject.name : "Count of anti-displacement policies")} />
       </div>
     </div>
     );
