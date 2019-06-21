@@ -79,6 +79,12 @@ resetPosition = () => {
     });
 }
 
+bringLayerToFront = (layer) => {
+  if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+    layer.bringToFront();
+  }
+}
+
 updateStyle = (focusCity, focusPolicy) => {
   //.find( (element) => (element.feature.properties.city === focusCity) ) )
   this.setState({
@@ -101,7 +107,7 @@ zoomToFeature = (focusCity) => {
   const map = this.refs.map.leafletElement,
         data = this.refs.data.leafletElement,
         focusElement = Object.values(data._layers).find( (element) => (element.feature.properties.city === focusCity) ); 
-  focusElement.bringToFront();
+  this.bringLayerToFront(focusElement);
   map.flyToBounds(focusElement._bounds, 
     {
       padding: [250,250], 
@@ -114,7 +120,7 @@ zoomToFeature = (focusCity) => {
 handleFeatureClick = (e) => {
   var layer = e.target;
   this.updateStyle(e.target.feature.properties.city, this.state.focusPolicy);
-  layer.bringToFront();
+  this.bringLayerToFront(layer);
 }
 
 onEachFeature = (feature, layer) => {
