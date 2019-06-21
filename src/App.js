@@ -1,8 +1,14 @@
 import React from 'react';
 import { Map, Pane, TileLayer, GeoJSON, ZoomControl} from 'react-leaflet';
+import L from 'leaflet';
 import mapData from './data/mapData.json';
 
 import './App.scss'
+
+const INITIAL_MAP_BOUNDS = L.latLngBounds(
+  L.latLng(36.923548,-123.895569),
+  L.latLng(38.328730,-120.470581)
+);
 
 const getColorTotal = function(d) {
   return d < 1 ? '#e1dbca' :
@@ -64,11 +70,12 @@ constructor() {
 
 resetPosition = () => {
   const map = this.refs.map.leafletElement;
-  map.setZoom(9);
-  map.flyTo({
-    lat: 37.7,
-    lng: -122.6
-  });
+  map.flyToBounds(INITIAL_MAP_BOUNDS,
+    {
+      padding: [100,100], 
+      duration: 0.5, 
+      easeLinearity: 0.5
+    });
 }
 
 updateStyle = (focusCity, focusPolicy) => {
@@ -90,17 +97,10 @@ updateStyle = (focusCity, focusPolicy) => {
 }
 
 zoomToFeature = (focusCity) => {
-  const data = this.refs.data.leafletElement;
-  const focusElement = Object.values(data._layers).find( (element) => (element.feature.properties.city === focusCity) ); 
-  const focusElementCenter = {
-    lat: (focusElement._bounds._northEast.lat + focusElement._bounds._southWest.lat) / 2,
-    lng: (focusElement._bounds._northEast.lng + focusElement._bounds._southWest.lng) / 2
-  };
-  console.log(focusElementCenter);
+  const map = this.refs.map.leafletElement,
+        data = this.refs.data.leafletElement,
+        focusElement = Object.values(data._layers).find( (element) => (element.feature.properties.city === focusCity) ); 
   focusElement.bringToFront();
-      
-
-  const map = this.refs.map.leafletElement;
   map.flyToBounds(focusElement._bounds, 
     {
       padding: [250,250], 
@@ -110,20 +110,19 @@ zoomToFeature = (focusCity) => {
     });
 }
 
-onEachFeature = (feature, layer) => {
-  layer.on({
-    click: this.clickToFeature.bind(this)
-  });
-}
-
-clickToFeature = (e) => {
+handleFeatureClick = (e) => {
   var layer = e.target;
   this.updateStyle(e.target.feature.properties.city, this.state.focusPolicy);
   layer.bringToFront();
 }
 
-render() {
+onEachFeature = (feature, layer) => {
+  layer.on({
+    click: this.handleFeatureClick.bind(this)
+  });
+}
 
+render() {
   const position = [this.state.lat, this.state.lng];
 
     return (
@@ -166,7 +165,7 @@ render() {
           <div className="uk-height-medium uk-overflow-auto">
             <ul className="uk-nav uk-dropdown-nav">
                 <li>
-                  <a href='#' onClick={() => this.resetPosition()}>Show All</a>
+                  <a href='#' onClick={() => {this.updateStyle(null, this.state.focusPolicy); this.resetPosition();}}>Show All</a>
                 </li>
                 <li className="uk-nav-divider"></li>
                 {this.cityList.map( (cityName) => 
