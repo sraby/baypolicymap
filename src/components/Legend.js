@@ -8,9 +8,9 @@ const Legend = (props) => {
         <div>
             <div className="legend-items">
                 <div className="legend-label">0</div>
-                <div className="legend-label"></div>
-                <div className="legend-label"></div>
-                <div className="legend-label"></div>
+                <div className="legend-label">&nbsp;</div>
+                <div className="legend-label">&nbsp;</div>
+                <div className="legend-label">&nbsp;</div>
                 <div className="legend-label">14</div>
             </div>
             <div className="legend-items">
