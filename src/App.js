@@ -21,7 +21,7 @@ const getColorTotal = function(d) {
 };
 
 const getColor = function(d) {
-  return !d || d.slice(0,2) === 'No' ? '#E2DDCF' : 
+  return !d || d.slice(0,2).toUpperCase() === 'NO' ? '#E2DDCF' : 
   '#F9BB56';
 }
 
