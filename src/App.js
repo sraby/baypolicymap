@@ -15,13 +15,13 @@ const INITIAL_MAP_BOUNDS = L.latLngBounds(
 const getColorTotal = function(d) {
   return d < 1 ? '#e1dbca' :
          d < 3 ? '#F2E0BF' :
-         d < 5 ? '#F5D290' :
-         d < 11 ? '#F4B030' :
+         d < 6 ? '#F5D290' :
+         d < 10 ? '#F4B030' :
          '#e49d1b';
 };
 
 const getColor = function(d) {
-  return d < 1 ? '#E2DDCF' : 
+  return !d || d.slice(0,2) === 'No' ? '#E2DDCF' : 
   '#F9BB56';
 }
 
