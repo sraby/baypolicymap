@@ -13,9 +13,9 @@ const INITIAL_MAP_BOUNDS = L.latLngBounds(
 );
 
 const getColorTotal = function(d) {
-  return d < 1 ? '#e1dbca' :
-         d < 3 ? '#F2E0BF' :
-         d < 6 ? '#F5D290' :
+  return d < 1 ? '#FAEFDA' :
+         d < 3 ? '#F4E0BB' :
+         d < 6 ? '#FCD07E' :
          d < 10 ? '#F4B030' :
          '#e49d1b';
 };
