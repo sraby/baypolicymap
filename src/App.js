@@ -72,6 +72,19 @@ constructor() {
     }, []).sort();
 }
 
+componentDidMount() {
+  for (const feature of mapData.features) {
+    var total = 0;
+    for (const policy of this.policyList) {
+      if (feature.properties[policy.code] && 
+          feature.properties[policy.code].slice(0,2).toUpperCase() !== 'NO') {
+            total++ 
+          }
+    }
+    feature.properties.total = total;
+  }
+}
+
 resetPosition = () => {
   const map = this.refs.map.leafletElement;
   map.flyToBounds(INITIAL_MAP_BOUNDS,
@@ -202,7 +215,7 @@ render() {
             </ul>
           </div>
         </div>
-        <Legend className="legend"
+        <Legend 
           policy={(focusPolicyObject && focusPolicyObject.name ? focusPolicyObject.name : "Count of anti-displacement policies")} />
         <InventoryBox
           policyList={this.policyList} 
