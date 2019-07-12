@@ -16,17 +16,21 @@
 // CUSTOM STYLING
 
 .policy-selector, .city-selector {
-	position: fixed;
+    position: fixed;
 	color: #333;
     background-color: #FFF;
     right: 70px;
     border-radius: 5px;
 	z-index: 500;
-	box-shadow: 0 5px 15px rgba(0,0,0,.08);
+    box-shadow: 0 5px 15px rgba(0,0,0,.08);
 
     &:hover, &:active, &:focus {
         background-color: #f4f4f4
     }
+}
+
+.uk-nav.uk-dropdown-nav {
+    margin-right: 30px;
 }
 
 .uk-dropdown-nav > li > a.active {
@@ -108,7 +112,7 @@
     z-index: 1010;
     min-width: 350px;
     max-width: 400px;
-    max-height: 90%;
+    max-height: 85%;
     overflow-y: scroll;
     position: absolute;
     left: 20px;
