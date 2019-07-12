@@ -11,7 +11,7 @@ const Legend = (props) => {
                 <div className="legend-label">&nbsp;</div>
                 <div className="legend-label">&nbsp;</div>
                 <div className="legend-label">&nbsp;</div>
-                <div className="legend-label">12+</div>
+                <div className="legend-label">10+</div>
             </div>
             <div className="legend-items">
                 <div className="legend-color gradient-1" />
