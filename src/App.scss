@@ -103,3 +103,23 @@
     
     }
 }
+
+.inventory-box {
+    z-index: 1010;
+    min-width: 350px;
+    max-width: 450px;
+    position: absolute;
+    left: 30px;
+    top: 10px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0,0,0,.08);
+    
+    .inventory-list {
+        .inventory-list-item {
+            font-size: .8rem;
+            padding: 2px 0 2px 0;
+            margin: 0;
+        }
+    }
+}

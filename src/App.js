@@ -4,6 +4,7 @@ import L from 'leaflet';
 import mapData from './data/mapData.json';
 
 import Legend from './components/Legend';
+import InventoryBox from './components/InventoryBox';
 
 import './App.scss'
 
@@ -49,12 +50,12 @@ constructor() {
   }
 
   this.policyList = [
-     {code: "condoconv", name:"Condominium conversion regulations"},
      {code: "justcause", name:"Just Cause Eviction Ordinance"},
      {code: "stabilizat", name:"Rent Stabilization or Rent Control"},
      {code: "reviewboar", name:"Rent Review Board and/or Mediation"},
      {code: "mobilehome", name:"Mobile home rent control"},
      {code: "sropres", name:"SRO preservation"},
+     {code: "condoconv", name:"Condominium conversion regulations"},
      {code: "foreclosur", name:"Foreclosure assistance"},
      {code: "jobshousin", name:"Jobs-housing linkage fee"},
      {code: "commercial", name:"Commerical linkage fee"},
@@ -133,6 +134,9 @@ onEachFeature = (feature, layer) => {
 
 render() {
   const position = [this.state.lat, this.state.lng];
+  const focusCityData = mapData.features.find( (feature) =>
+    (feature.properties.city === this.state.focusCity)
+  );
   const focusPolicyObject = this.policyList.find( (policy) =>
     (policy.code === this.state.focusPolicy) 
   );
@@ -200,6 +204,9 @@ render() {
         </div>
         <Legend className="legend"
           policy={(focusPolicyObject && focusPolicyObject.name ? focusPolicyObject.name : "Count of anti-displacement policies")} />
+        <InventoryBox
+          policyList={this.policyList} 
+          cityData={focusCityData && focusCityData.properties} />
       </div>
     </div>
     );
