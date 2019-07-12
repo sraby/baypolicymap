@@ -112,8 +112,8 @@ zoomToFeature = (focusCity) => {
         focusElement = Object.values(data._layers).find( (element) => (element.feature.properties.city === focusCity) ); 
   this.bringLayerToFront(focusElement);
   map.flyToBounds(focusElement._bounds, 
-    {
-      padding: [250,250], 
+    { 
+      paddingTopLeft: [250,0],
       duration: 0.25, 
       easeLinearity: 0.5, 
       maxZoom: 10
