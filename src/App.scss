@@ -107,7 +107,9 @@
 .inventory-box {
     z-index: 1010;
     min-width: 350px;
-    max-width: 450px;
+    max-width: 400px;
+    max-height: 90%;
+    overflow-y: scroll;
     position: absolute;
     left: 20px;
     top: 10px;
