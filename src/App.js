@@ -89,7 +89,7 @@ resetPosition = () => {
   const map = this.refs.map.leafletElement;
   map.flyToBounds(INITIAL_MAP_BOUNDS,
     {
-      padding: [100,100], 
+      paddingTopLeft: [250,0],
       duration: 0.5, 
       easeLinearity: 0.5
     });
