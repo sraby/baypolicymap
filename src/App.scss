@@ -109,7 +109,7 @@
     min-width: 350px;
     max-width: 450px;
     position: absolute;
-    left: 30px;
+    left: 20px;
     top: 10px;
     background-color: white;
     border-radius: 5px;
@@ -121,5 +121,19 @@
             padding: 2px 0 2px 0;
             margin: 0;
         }
+    }
+
+    .inventory-sources {
+        font-size: .8rem;
+        font-style: italic;
+        a {
+            color: #666;
+            text-decoration: underline;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
+        
     }
 }
