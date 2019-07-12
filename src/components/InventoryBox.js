@@ -19,12 +19,14 @@ class InventoryBox extends React.Component {
                     'Choose a city from the map to see its anti-displacement policy measures'}
                 </h5>
                 <ul className="inventory-list uk-list uk-list-divider">
-                    {this.props.policyList.map(policy =>
-                        <li key={policy.code} className="inventory-list-item">
-                            <span className={(this.props.cityData && this.props.cityData[policy.code].slice(0,2).toUpperCase() !== 'NO') ? 'uk-text-bold' : ''}>
-                                {policy.name} <a className="uk-text-secondary" href={('#' + policy.code)} >ⓘ</a>: {(this.props.cityData && this.props.cityData[policy.code])}
-                            </span>
-                        </li>
+                    {this.props.policyList.map(policy => {
+                        const policyIsActive = (this.props.cityData && this.props.cityData[policy.code].slice(0,2).toUpperCase() !== 'NO');
+                        return (<li key={policy.code} className="inventory-list-item">
+                            <span className={policyIsActive ? 'highlighted-policy' : ''}>
+                                {policyIsActive && "✓ "}{policy.name} <a className="uk-text-secondary" href={('#' + policy.code)} >ⓘ</a>: </span>
+                                {(this.props.cityData && this.props.cityData[policy.code])}
+                             </li>)
+                        }
                     )}
                 </ul>
                 <span className="inventory-sources"> 
