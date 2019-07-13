@@ -1,7 +1,6 @@
 import React from 'react';
 import { Map, TileLayer, GeoJSON, ZoomControl} from 'react-leaflet';
 import L from 'leaflet';
-import mapData from './data/mapData.json';
 
 import Legend from './components/Legend';
 import InventoryBox from './components/InventoryBox';
@@ -35,8 +34,11 @@ constructor() {
     lat: 37.7,
     lng: -122.6,
     zoom: 9,
+    mapData: null,
+
     focusCity: null,
     focusPolicy: "total",
+
     style: function (geoJsonFeature) {
       return {
         fillColor: getColorTotal(geoJsonFeature.properties.total),
@@ -46,10 +48,9 @@ constructor() {
         fillOpacity: 0.9
       } ;
     },
-  
-  }
 
-  this.policyList = [
+    cityList: null,
+    policyList: [
      {code: "justcause", name:"Just Cause Eviction Ordinance"},
      {code: "stabilizat", name:"Rent Stabilization or Rent Control"},
      {code: "reviewboar", name:"Rent Review Board and/or Mediation"},
@@ -64,24 +65,45 @@ constructor() {
      {code: "densitybon", name:"Density bonus ordinance"},
      {code: "landtrust", name:"Community Land Trusts"},
      {code: "firstsourc", name:"First source hiring"}
-  ];
+    ]
+  }
+}
 
-  this.cityList = mapData.features.reduce((list, feature) => {
+/** Load map data from github */
+componentDidMount() {
+
+  fetch('https://raw.githubusercontent.com/urbandisplacement/baypolicydata/master/mapData.json')
+     .then((response) => response.json())
+     .then((responseJson) => {
+        this.setState({ mapData: responseJson });
+     })
+     .catch((error) => {
+        console.error(error);
+     });
+}
+
+/** Calculate total policies count for each city and create list of cities */
+componentDidUpdate(prevProps, prevState) {
+  if (!prevState.mapData && this.state.mapData) {
+    for (const feature of this.state.mapData.features) {
+      var total = 0;
+      for (const policy of this.state.policyList) {
+        if (feature.properties[policy.code] && 
+            feature.properties[policy.code].slice(0,2).toUpperCase() !== 'NO') {
+              total++ 
+            }
+      }
+      feature.properties.total = total;
+    }
+
+    const cityList = this.state.mapData.features.reduce((list, feature) => {
       list.push(feature.properties.city);
       return list; 
     }, []).sort();
-}
 
-componentDidMount() {
-  for (const feature of mapData.features) {
-    var total = 0;
-    for (const policy of this.policyList) {
-      if (feature.properties[policy.code] && 
-          feature.properties[policy.code].slice(0,2).toUpperCase() !== 'NO') {
-            total++ 
-          }
-    }
-    feature.properties.total = total;
+    this.setState({
+      cityList: cityList
+    });
   }
 }
 
@@ -147,14 +169,15 @@ onEachFeature = (feature, layer) => {
 
 render() {
   const position = [this.state.lat, this.state.lng];
-  const focusCityData = mapData.features.find( (feature) =>
+  const focusCityData = this.state.mapData && this.state.mapData.features.find( (feature) =>
     (feature.properties.city === this.state.focusCity)
   );
-  const focusPolicyObject = this.policyList.find( (policy) =>
+  const focusPolicyObject = this.state.policyList.find( (policy) =>
     (policy.code === this.state.focusPolicy) 
   );
 
   return (
+    (this.state.mapData && 
     <div>
       <Map ref='map' center={position} zoom={this.state.zoom} zoomControl={false} scrollWheelZoom={true} className="map-container">
         <TileLayer 
@@ -167,7 +190,7 @@ render() {
           pane="shadowPane" />        
         <GeoJSON 
           ref='data' 
-          data={mapData} 
+          data={this.state.mapData} 
           style={this.state.style} 
           onEachFeature={this.onEachFeature} />
         <ZoomControl position='topright' />
@@ -185,7 +208,7 @@ render() {
                 </a>
               </li>
               <li className="uk-nav-divider"></li>
-              {this.policyList.map( (policy) => 
+              {this.state.policyList.map( (policy) => 
                 <li key={policy.code}>
                   <a href='#' 
                      className={(this.state.focusPolicy === policy.code ? "active" : "")}
@@ -204,7 +227,7 @@ render() {
                   <a href='#' onClick={() => {this.updateStyle(null, this.state.focusPolicy); this.resetPosition();}}>Show All</a>
                 </li>
                 <li className="uk-nav-divider"></li>
-                {this.cityList.map( (cityName) => 
+                {this.state.cityList && this.state.cityList.map( (cityName) => 
                 <li key={cityName}>
                   <a href='#' 
                      className={(this.state.focusCity === cityName ? "active" : "")}
@@ -218,10 +241,10 @@ render() {
         <Legend 
           policy={(focusPolicyObject && focusPolicyObject.name ? focusPolicyObject.name : "Count of anti-displacement policies")} />
         <InventoryBox
-          policyList={this.policyList} 
+          policyList={this.state.policyList} 
           cityData={focusCityData && focusCityData.properties} />
       </div>
-    </div>
+    </div>)
     );
 
   }
