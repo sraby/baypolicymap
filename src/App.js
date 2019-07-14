@@ -177,7 +177,11 @@ render() {
   );
 
   return (
-    (this.state.mapData && 
+    (!this.state.mapData ? 
+    <div className="uk-position-center">
+      <span uk-spinner="ratio: 2" />
+      <p>Loading...</p>
+    </div> :
     <div>
       <Map ref='map' center={position} zoom={this.state.zoom} zoomControl={false} scrollWheelZoom={true} className="map-container">
         <TileLayer 
