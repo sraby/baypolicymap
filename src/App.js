@@ -72,7 +72,7 @@ constructor() {
 /** Load map data from github */
 componentDidMount() {
 
-  fetch('https://raw.githubusercontent.com/urbandisplacement/baypolicydata/master/mapData.json')
+  fetch('https://raw.githubusercontent.com/cci-ucb/baypolicydata/master/mapData.json')
      .then((response) => response.json())
      .then((responseJson) => {
         this.setState({ mapData: responseJson });
